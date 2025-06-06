@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Faculty Day Chatbot</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; }
+    .chatbox { border: 1px solid #ccc; padding: 20px; border-radius: 10px; }
+    .user, .bot { margin: 10px 0; }
+    .user { text-align: right; color: #333; }
+    .bot { text-align: left; color: #0066cc; }
+    input { width: 80%; padding: 10px; }
+    button { padding: 10px; }
+  </style>
+</head>
+<body>
+  <h2>Faculty Day Chatbot 🤖</h2>
+  <div class="chatbox" id="chat"></div>
+  <input type="text" id="userInput" placeholder="Ask me something..." />
+  <button onclick="sendMessage()">Send</button>
+
+  <script>
+    const chat = document.getElementById("chat");
+    const input = document.getElementById("userInput");
+
+    const responses = {
+      "agenda": `Here's the Faculty Day agenda:
+09:00 - Coffee & Welcome
+09:30 - Ice Breaker with Urso Rettig (Balloon Games!)
+10:00 - Semester Wrap-Up
+10:30 - Generative AI in Education
+11:00 - Palace History Tour (in groups)
+12:00 - Lunch
+13:30 - "What do we do?" session
+14:00 - SHMS Values Workshop
+15:00 - Coffee Break
+15:30 - Wrap-Up & End of Day`,
+
+      "leaders": `Faculty Day is led by:
+- Patrick Taffin (Dean)
+- Mikhail Prudent (Assistant Dean, Leysin)
+- Malin Persson (Assistant Dean, Caux)`,
+
+      "ice": `The ice breaker is run by language teacher Urso Rettig and features balloon games! 🎈`,
+
+      "ai": `The Generative AI session discusses ethical use of AI in education—focus on transparency, responsibility, and avoiding detection tools.`,
+
+      "values": `SHMS Values:
+- Integrity: Be a role model
+- Mastery: Learn the rules before breaking them
+- Care: Be a true hotelier`,
+
+      "default": `I'm your Faculty Day assistant! You can ask me:
+- What's the agenda?
+- Who's leading the event?
+- What's the ice breaker?
+- What are the SHMS values?
+- Tell me about the AI session`
+    };
+
+    function sendMessage() {
+      const text = input.value.trim();
+      if (!text) return;
+      appendMessage("user", text);
+
+      const key = Object.keys(responses).find(k => text.toLowerCase().includes(k)) || "default";
+      appendMessage("bot", responses[key]);
+
+      input.value = "";
+    }
+
+    function appendMessage(sender, message) {
+      const div = document.createElement("div");
+      div.className = sender;
+      div.textContent = (sender === "user" ? "You: " : "Bot: ") + message;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+  </script>
+</body>
+</html>
