@@ -1,0 +1,81 @@
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
+const responses = {
+  "agenda": `Here's the Faculty Day agenda:
+09:00 - Coffee & Welcome
+09:30 - Ice Breaker with Urso Rettig (Balloon Games!)
+10:00 - Semester Wrap-Up
+10:30 - Generative AI in Education
+11:00 - Palace History Tour (in groups)
+12:00 - Lunch
+13:30 - "What do we do?" session
+14:00 - SHMS Values Workshop
+15:00 - Coffee Break
+15:30 - Wrap-Up & End of Day`,
+
+  "leaders": `Faculty Day is led by:
+- Patrick Taffin (Dean)
+- Mikhail Prudent (Assistant Dean, Leysin)
+- Malin Persson (Assistant Dean, Caux)` ,
+
+  "icebreaker": `The morning Ice Breaker is hosted by language teacher Urso Rettig and involves balloon games—get ready to have fun! 🎈`,
+
+  "ai": `The Generative AI session covers effective, ethical use in education. Key points include transparency, accountability, and avoiding unsupported AI-detection tools.`,
+
+  "values": `The SHMS Values are:
+- Integrity: Be a role model
+- Mastery: Learn the rules before breaking them
+- Care: Be a true hotelier
+These are explored in a fun workshop with "Two Lies and a Truth" and value categorization activities.`,
+
+  "default": `I'm your Faculty Day assistant! You can ask me things like:
+- What's the agenda?
+- Who's leading the event?
+- Tell me about the ice breaker
+- What are SHMS values?
+- What is the AI session about?`
+};
+
+export default function FacultyDayBot() {
+  const [input, setInput] = useState("");
+  const [chat, setChat] = useState([]);
+
+  const handleSend = () => {
+    const question = input.toLowerCase();
+    let answer = responses.default;
+    if (question.includes("agenda")) answer = responses.agenda;
+    else if (question.includes("leader")) answer = responses.leaders;
+    else if (question.includes("ice")) answer = responses.icebreaker;
+    else if (question.includes("ai")) answer = responses.ai;
+    else if (question.includes("value")) answer = responses.values;
+
+    setChat([...chat, { role: "user", text: input }, { role: "bot", text: answer }]);
+    setInput("");
+  };
+
+  return (
+    <div className="max-w-xl mx-auto mt-10 space-y-4">
+      <Card>
+        <CardContent className="p-4 space-y-4">
+          {chat.map((entry, idx) => (
+            <div key={idx} className={entry.role === "user" ? "text-right" : "text-left text-blue-700"}>
+              <p><strong>{entry.role === "user" ? "You" : "Bot"}:</strong> {entry.text}</p>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+      <div className="flex space-x-2">
+        <Input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Ask me about Faculty Day..."
+        />
+        <Button onClick={handleSend}>Send</Button>
+      </div>
+    </div>
+  );
+}
+
